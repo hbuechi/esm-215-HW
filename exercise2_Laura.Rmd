@@ -1,0 +1,97 @@
+---
+title: "215 Lab 2"
+author: "Laura Wolf"
+date: "January 17, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+library(tidyverse)
+library(entropy)
+
+df <- as.data.frame(read_csv("W19/215/data/ex2_sample_data.csv"))
+
+```
+Mutual information: Look at set of variables and the shared information between them. Want to see where two variables are occurring together in space (where they share information). Look at two descriptor variables at a time. 
+geology, radiation, and flow. 
+
+```{r geol}
+
+table(df[,3])
+table(df[,6])
+table(df[,3],df[,6])
+mi.empirical(table(df[,6],df[,3])) #mutual information
+entropy(df[,6]) #entropy
+entropy(df[,3]) #entropy
+
+```
+
+Features of geology and vegetation co-occur 16% of the time
+
+```{r veg_rad}
+
+table(df[,4])
+table(df[,6])
+mi.empirical(table(df[,6],df[,4])) #mutual information
+entropy(df[,6]) #entropy
+entropy(df[,4]) #entropy
+
+```
+
+```{r veg_flow}
+
+table(df[,5])
+table(df[,6])
+mi.empirical(table(df[,6],df[,5])) #mutual information
+entropy(df[,6]) #entropy
+entropy(df[,5]) #entropy
+
+```
+
+At the first level, geology is the strongest predictor of vegetation or has the most mutual information with vegetation
+
+```{r geology_flow}
+
+geol1_vegflow <- mi.empirical(table(df[df[,3]==1,6],df[df[,3]==1,5]))
+geol1_vegflow #0.008374299
+table_geoflow <- table(df[df[,3]==1,6],df[df[,3]==1,5])
+table_geoflow # frequency of veg classes with geology type 1 in each flow type
+
+geol2_vegflow <- mi.empirical(table(df[df[,3]==2,6],df[df[,3]==2,5]))
+geol2_vegflow #0.008374299
+
+geol5_vegflow <- mi.empirical(table(df[df[,3]==5,6],df[df[,3]==5,5]))
+geol5_vegflow #0.005408553
+
+geol6_vegflow <- mi.empirical(table(df[df[,3]==6,6],df[df[,3]==6,5]))
+geol6_vegflow #0.009004135
+
+
+```
+
+```{r geology_rad}
+
+#geology and radiation
+
+geol1_vegrad <- mi.empirical(table(df[df[,3]==1,6],df[df[,3]==1,4]))
+geol1_vegrad #0.06348332 This is the highest number.
+
+table_georad <- table(df[df[,3]==1,6],df[df[,3]==1,4])
+table_georad # frequency of veg classes with geology type 1 in each flow type
+
+geol2_vegrad <- mi.empirical(table(df[df[,3]==2,6],df[df[,3]==2,4]))
+geol2_vegrad #0.02894113
+
+geol5_vegrad <- mi.empirical(table(df[df[,3]==5,6],df[df[,3]==5,4]))
+geol5_vegrad #0.03346215
+
+geol6_vegrad <- mi.empirical(table(df[df[,3]==6,6],df[df[,3]==6,4]))
+geol6_vegrad #0.04961867
+
+```
+
